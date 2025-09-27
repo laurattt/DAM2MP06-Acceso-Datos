@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+Test set: com.project.PR115cpTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.151 s <<< FAILURE! - in com.project.PR115cpTest
+com.project.PR115cpTest.testCopiarArxiuAmbLiniaEnBlancFinal  Time elapsed: 0.112 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: El fitxer de destí hauria d'existir ==> expected: <true> but was: <false>
+	at com.project.PR115cpTest.testCopiarArxiuAmbLiniaEnBlancFinal(PR115cpTest.java:83)
+
+com.project.PR115cpTest.testCopiarArxiuAmbLiniesEnBlanc  Time elapsed: 0.002 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: El fitxer de destí hauria d'existir ==> expected: <true> but was: <false>
+	at com.project.PR115cpTest.testCopiarArxiuAmbLiniesEnBlanc(PR115cpTest.java:45)
+

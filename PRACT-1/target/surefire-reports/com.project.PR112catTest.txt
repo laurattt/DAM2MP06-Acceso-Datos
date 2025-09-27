@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+Test set: com.project.PR112catTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 0.014 s <<< FAILURE! - in com.project.PR112catTest
+com.project.PR112catTest.testMostrarMissatgeFitxerNoExisteix  Time elapsed: 0.003 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <El fitxer no existeix o no és accessible.> but was: <>
+	at com.project.PR112catTest.testMostrarMissatgeFitxerNoExisteix(PR112catTest.java:91)
+
+com.project.PR112catTest.testMostrarContingutArxiuCorrecte  Time elapsed: 0.003 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at com.project.PR112catTest.testMostrarContingutArxiuCorrecte(PR112catTest.java:48)
+
+com.project.PR112catTest.testMostrarMissatgeEsCarpeta  Time elapsed: 0.003 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <El path no correspon a un arxiu, sinó a una carpeta.> but was: <>
+	at com.project.PR112catTest.testMostrarMissatgeEsCarpeta(PR112catTest.java:70)
+
