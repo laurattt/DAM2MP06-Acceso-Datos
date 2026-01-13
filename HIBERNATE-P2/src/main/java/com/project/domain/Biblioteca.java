@@ -24,8 +24,10 @@ public class Biblioteca implements Serializable {
     private String email;
 
     // TODO 3: @OneToMany cap a Exemplar
-    @OneToMany(mappedBy = "biblioteca", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Exemplar> exemplars = new HashSet<>();
+
+    // Por cada biblioteca hay muchos ejemplares 
+    @OneToMany(mappedBy = "biblioteca", fetch = FetchType.LAZY, cascade = CascadeType.ALL) // mapped = NO propetiario de la relación
+    private Set<Exemplar> exemplars = new HashSet<>(); // Exemplar PROPETARIO relación (lado :M)
 
     public Biblioteca() {}
 

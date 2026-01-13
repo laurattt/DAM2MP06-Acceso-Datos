@@ -94,7 +94,7 @@ public class Manager {
             tx = session.beginTransaction();
             // TODO: Crear l'objecte Autor amb el constructor i persistir-lo amb session.persist()
             autor = new Autor(nom);
-            session.persist(autor);
+            session.persist(autor); // marca el objeto para que se inserte más adelante
             
             tx.commit();
         } catch (Exception e) {
@@ -123,7 +123,7 @@ public class Manager {
             tx = session.beginTransaction();
             // TODO: Crear l'objecte Llibre amb el constructor i persistir-lo
             llibre = new Llibre(isbn, titol, editorial, anyPublicacio);
-            session.persist(llibre);
+            session.persist(llibre); // insert futuro bla bla
             
             tx.commit();
         } catch (Exception e) {
@@ -165,16 +165,17 @@ public class Manager {
             //    Hibernate detectarà els canvis i actualitzarà la taula intermèdia.
             Autor autor = session.find(Autor.class, autorId);
 
+            // PREGUNTA DESPUES: si autor fuera quien lleva la relacion, como seria este paso? -> inversa(?)
             if (autor != null) {
-                autor.setNom(nom);
+                autor.setNom(nom); // se asigna nombre 
                 for (Llibre llibre : llibres) {
-                    Llibre llibreDB = session.find(Llibre.class, llibre.getLlibreId());
+                    Llibre llibreDB = session.find(Llibre.class, llibre.getLlibreId()); // por cada libro se busca su id
 
-                    if (llibreDB != null) {
-                        llibreDB.getAutors().add(autor);
-                        session.merge(llibreDB);
-                    }
-                }
+                    if (llibreDB != null) { 
+                        llibreDB.getAutors().add(autor); // si no es null se agregan los autores 
+                        session.merge(llibreDB); // copia info org y junta con nueva info zz
+                    } 
+                } // Hibernate DETECTA cambios y ACTUALIZA tabla intermediaria 
             }
             
             tx.commit();
@@ -204,7 +205,7 @@ public class Manager {
             tx = session.beginTransaction();
             // TODO: Crear l'objecte Biblioteca amb el constructor i persistir-lo
             biblio = new Biblioteca(nom, ciutat, adreca, telefon, email);
-            session.persist(biblio);
+            session.persist(biblio); // futuro insert 
             
             tx.commit();
         } catch (Exception e) {
@@ -235,7 +236,8 @@ public class Manager {
             // NOTA: Els objectes llibre i biblioteca passats com a paràmetre poden estar "detached"
             // (no associats a aquesta sessió). Pots usar session.merge() per reassociar-los
             // o simplement passar-los al constructor i persistir l'exemplar.
-            Llibre llibreManaged = session.merge(llibre);
+            
+            Llibre llibreManaged = session.merge(llibre); // ??????????????
             Biblioteca biblioManaged = session.merge(biblioteca);
 
             exemplar = new Exemplar(codiBarres, llibreManaged, biblioManaged);

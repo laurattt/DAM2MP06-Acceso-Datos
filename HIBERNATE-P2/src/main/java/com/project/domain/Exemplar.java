@@ -18,7 +18,7 @@ public class Exemplar implements Serializable {
     private Long exemplarId;
 
     // TODO 3: @Column amb unique = true
-    @Column(unique = true)
+    @Column(unique = true) // valores únicos en la bbdd
     private String codiBarres;
 
     private boolean disponible;
@@ -26,13 +26,13 @@ public class Exemplar implements Serializable {
     // TODO 4: Relació ManyToOne amb Llibre
     // @JoinColumn(name = "llibre_id")
     @ManyToOne
-    @JoinColumn(name = "llibre_id")
+    @JoinColumn(name = "llibre_id") // Parte M:
     private Llibre llibre;
 
     // TODO 5: Relació ManyToOne amb Biblioteca
     // @JoinColumn(name = "biblioteca_id")
     @ManyToOne
-    @JoinColumn(name = "biblioteca_id")
+    @JoinColumn(name = "biblioteca_id") // Parte M:
     private Biblioteca biblioteca;
 
     // TODO 6: Relació OneToMany amb Prestec (historial)
