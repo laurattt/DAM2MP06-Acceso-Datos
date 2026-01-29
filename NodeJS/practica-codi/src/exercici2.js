@@ -134,19 +134,36 @@ async function main() {
 
         // extraccion datos a JSON 
         // primero for games y luego review, para que compare entre 2 reviews por juego 
-        const sentimentNewReview = await analyzeSentiment(game.content) // opinion/mensaje ollama
+        
+        // cambio de logica del for para agregar contador (condicionales entre reviews)
+        for (const game of gamesToAnalyze){ //por cada 1 juego
+            for(const review of reviewsToAnalyze){ // ve 2 reviews
+                const sentimentNewReview = await analyzeSentiment(game.content) // opinion/mensaje ollama
 
-        for (const game of gamesToAnalyze){
-            for(const review of reviewsToAnalyze)
+                console.log(`Hola, generando respuesta a peticion :D \n`)
 
-            console.log(`Hola, generando respuesta a peticion :D \n`)
+                const jsonNewExercici2 = {
+                    timestamp: new Date().toISOString(), //timestamp de cuando se analizó la review 
+                    game:[
+                        {
+                        "appid:": game.appid,
+                        "name:": game.name,
+                        "statistics:":{
+                            "positive:": review.is_positive
+                        }
+                }],
+                    sentiment: sentimentNewReview,
+                    model: process.env.CHAT_API_OLLAMA_MODEL_TEXT
+                }
+
+                console.log(JSON.stringify(jsonNewExercici2, null, 2));
+            }
         }
 
             
 
-
-
         // TEST(?)
+        /* 
         for (const review of reviewsToAnalyze){
             const sentimentNewReview = await analyzeSentiment(review.content) // opinion/mensaje ollama
 
@@ -174,8 +191,9 @@ async function main() {
                 console.log(JSON.stringify(jsonNewExercici2, null, 2));
             }
 
-        }
+        }*/
         
+
         /*
         for (const review of reviewsToAnalyze) {
             const sentiment = await analyzeSentiment(review.content);
