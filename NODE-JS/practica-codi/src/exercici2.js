@@ -163,6 +163,27 @@ async function main() {
 
         console.log(JSON.stringify(jsonNewExercici2, null, 2))
 
+        // agg json en data zzz
+        try {
+            const outputDir = path.join(__dirname, dataPath)  
+            const outputFilePath = path.join(outputDir, 'exercici2Resposta.json')
+
+         
+            if (!fs.existsSync(outputDir)) {
+                fs.mkdirSync(outputDir, { 
+                    recursive: true 
+                })
+            }
+
+            fs.writeFileSync(outputFilePath,JSON.stringify(jsonNewExercici2, null, 2),'utf-8'
+            )
+
+            console.log(`\nArchivo guardado correctamente en: ${outputFilePath}`)
+        } catch (writeErr) {
+            console.error('Error guardando archivo :(', writeErr.message || writeErr)
+        }
+
+
 
         /* TEST(?)
          for (const game of gamesToAnalyze){ //por cada 1 juego

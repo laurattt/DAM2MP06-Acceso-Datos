@@ -1,0 +1,118 @@
+{
+  "analisis": [
+    {
+      "imatge": {
+        "nom_fitxer": "02f4b3be2d.jpg"
+      },
+      "analisi": {
+        "nom_comu": "Pronghorn",
+        "nom_cientific": "Antilocapra americana",
+        "taxonomia": {
+          "classe": "Mammalia",
+          "ordre": "Artiodactyla",
+          "familia": "Antilocapridae"
+        },
+        "habitat": {
+          "tipus": [
+            "grasslands",
+            "prairies"
+          ],
+          "regioGeografica": [
+            "North America"
+          ],
+          "clima": [
+            "semi-arid",
+            "semi-humid"
+          ]
+        },
+        "dieta": {
+          "tipus": "herbivore",
+          "aliments_principals": [
+            "grass",
+            "forbs",
+            "shrubs"
+          ]
+        },
+        "caracteristiques_fisiques": {
+          "mida": {
+            "altura_mitjana_cm": "80-100",
+            "pes_mitja_kg": "40-60"
+          },
+          "colors_predominants": [
+            "brown",
+            "white"
+          ],
+          "trets_distintius": [
+            "horn-like structures",
+            "white underbelly"
+          ]
+        },
+        "estat_conservacio": {
+          "classificacio_IUCN": "Least Concern",
+          "amenaces_principals": [
+            "habitat loss",
+            "predation"
+          ]
+        }
+      }
+    },
+    {
+      "imatge": {
+        "nom_fitxer": "03d7fc0888.jpg"
+      },
+      "analisi": {
+        "nom_comu": "Saiga",
+        "nom_cientific": "Saiga tatarica",
+        "taxonomia": {
+          "classe": "Mammalia",
+          "ordre": "Artiodactyla",
+          "familia": "Bovidae"
+        },
+        "habitat": {
+          "tipus": [
+            "prat"
+          ],
+          "regioGeografica": [
+            "Siberia",
+            "Mongolia",
+            "Kazakhstan"
+          ],
+          "clima": [
+            "continental",
+            "semi-arid"
+          ]
+        },
+        "dieta": {
+          "tipus": "herbívora",
+          "aliments_principals": [
+            "herba",
+            "pastures"
+          ]
+        },
+        "caracteristiques_fisiques": {
+          "mida": {
+            "altura_mitjana_cm": "80-100",
+            "pes_mitja_kg": "40-60"
+          },
+          "colors_predominants": [
+            "bege",
+            "verd"
+          ],
+          "trets_distintius": [
+            "corns curts",
+            "ulls grans",
+            "pèl llarg"
+          ]
+        },
+        "estat_conservacio": {
+          "classificacio_IUCN": "Vulnerable",
+          "amenaces_principals": [
+            "caça",
+            "perduda d'hàbitat",
+            "predadors"
+          ]
+        }
+      }
+    }
+  ]
+}
