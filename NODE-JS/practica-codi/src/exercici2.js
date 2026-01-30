@@ -25,8 +25,8 @@ async function readCSV(filePath) {
 
 async function analyzeSentiment(text) {
     try {
-        console.log('\n -------------------- Enviant petició a Ollama... ------------------------');
-        console.log('Model:', process.env.CHAT_API_OLLAMA_MODEL_TEXT), `\n`;
+        //console.log('\n -------------------- Enviant petició a Ollama... ------------------------');
+        //console.log('Model:', process.env.CHAT_API_OLLAMA_MODEL_TEXT), `\n`;
         
         const response = await fetch(`${process.env.CHAT_API_OLLAMA_URL}/generate`, { // llamado a la api, await espera que se cumpla la promesa(Asincrona) que es generada por fetch()
             method: 'POST', // peticion http (metodo http (POST) + URI(process.env.CHAT_API_OLLAMA_URL))
@@ -110,33 +110,62 @@ async function main() {
         
 
         // Iterem per les primeres 10 reviews i analitzem el sentiment
-        console.log('\n=== Anàlisi de Sentiment de Reviews ===');
+        console.log('\n=== Anàlisi de Sentiment de exercici2 ===');
         const reviewsToAnalyze = reviews.slice(0, 2);
         
 
-        /*
-        CODE ORG 
-
-        for (const review of reviewsToAnalyze) {
-            console.log(`\nProcessant review: ${review.id}`);
-            const sentiment = await analyzeSentiment(review.content); //RESPUESTA OLLAMAAAAA
-            console.log(`Review ID: ${review.id}`);
-            console.log(`Joc ID: ${review.app_id}`);
-            console.log(`Contingut: ${review.content.substring(0, 100)}...`);
-            console.log(`Sentiment (Ollama): ${sentiment}`);
-            console.log('------------------------');
-        }
-        console.log(`\nNOMÉS AVALUEM LES DUES PRIMERES REVIEWS`);*/
-
         // EXERCICI2 ---------------------------------------------------------------------------------------
         const gamesToAnalyze = games.slice(0,2);
-        
 
         // extraccion datos a JSON 
         // primero for games y luego review, para que compare entre 2 reviews por juego 
-        
-        // cambio de logica del for para agregar contador (condicionales entre reviews)
-        for (const game of gamesToAnalyze){ //por cada 1 juego
+        const gamesResult = []
+
+        for (const game of gamesToAnalyze) { // por cada juego
+
+            let contadorPositivo = 0
+            let contadorNegativo = 0
+            let contadorNeutral = 0
+            let contadorError = 0
+
+            for (const review of reviewsToAnalyze) { // por cada review
+
+                const sentimentNewReview = await analyzeSentiment(review.content) // sentimiento review
+
+                if (sentimentNewReview === "negative") {
+                    contadorNegativo++
+                } else if (sentimentNewReview === "positive") {
+                    contadorPositivo++
+                } else if (sentimentNewReview === "neutral") {
+                    contadorNeutral++
+                } else {
+                    contadorError++
+                }
+            }
+
+            gamesResult.push({  //agg elementos  (info game)
+                appid: game.appid,
+                name: game.name,
+                statistics: {
+                    positive: contadorPositivo,
+                    negative: contadorNegativo,
+                    neutral: contadorNeutral,
+                    error: contadorError
+                }
+            })
+        }
+
+        const jsonNewExercici2 = {
+            timestamp: new Date().toISOString(),
+            games: gamesResult
+            //model: process.env.CHAT_API_OLLAMA_MODEL_TEXT
+        }
+
+        console.log(JSON.stringify(jsonNewExercici2, null, 2))
+
+
+        /* TEST(?)
+         for (const game of gamesToAnalyze){ //por cada 1 juego
             for(const review of reviewsToAnalyze){ // ve 2 reviews
                 const sentimentNewReview = await analyzeSentiment(game.content) // opinion/mensaje ollama
 
@@ -158,62 +187,7 @@ async function main() {
 
                 console.log(JSON.stringify(jsonNewExercici2, null, 2));
             }
-        }
-
-            
-
-        // TEST(?)
-        /* 
-        for (const review of reviewsToAnalyze){
-            const sentimentNewReview = await analyzeSentiment(review.content) // opinion/mensaje ollama
-
-            console.log(`Hola, generando respuesta a peticion :D \n`)
-
-            for(const game of gamesToAnalyze){ // iteracion de los juegos (2) por qué solo se estan iterando dos juegos si en ningun lado le asigno el valor de DOS 
-                //console.log(game)
-
-                // condicionales de "is_positive"
-
-                const jsonNewExercici2 = {
-                    timestamp: new Date().toISOString(), //timestamp de cuando se analizó la review 
-                    game:[
-                        {
-                        "appid:": game.appid,
-                        "name:": game.name,
-                        "statistics:":{
-                            "positive:": review.is_positive
-                        }
-                }],
-                    sentiment: sentimentNewReview,
-                    model: process.env.CHAT_API_OLLAMA_MODEL_TEXT
-                }
-
-                console.log(JSON.stringify(jsonNewExercici2, null, 2));
-            }
-
-        }*/
-        
-
-        /*
-        for (const review of reviewsToAnalyze) {
-            const sentiment = await analyzeSentiment(review.content);
-
-            const reviewJson = {
-                review_id: review.id,
-                app_id: review.app_id,
-                content_preview: review.content.substring(0, 100),
-                sentiment: sentiment,
-                model: process.env.CHAT_API_OLLAMA_MODEL_TEXT,
-                source: 'ollama',
-                analyzed_at: new Date().toISOString()
-            };
-
-            console.log(JSON.stringify(reviewJson, null, 2));
-        }
-        */
-
-    
-
+        }*/   
 
 
      } catch (error) {
