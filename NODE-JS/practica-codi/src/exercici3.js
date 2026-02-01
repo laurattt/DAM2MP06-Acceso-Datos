@@ -21,7 +21,7 @@ async function imageToBase64(imagePath) {
 }
 
 // Funció per fer la petició a Ollama amb més detalls d'error
-async function queryOllama(base64Image, prompt) {
+async function queryOllama(base64Image, prompt) { // prompt ollama zzzzz
     const requestBody = {
         model: OLLAMA_MODEL,
         prompt: prompt,
@@ -72,7 +72,7 @@ async function queryOllama(base64Image, prompt) {
 // Funció principal
 async function main() {
     try {
-        // Validem les variables d'entorn necessàries
+        // validación de variableeeeeeeeeeeees
         if (!process.env.DATA_PATH) {
             throw new Error('La variable d\'entorn DATA_PATH no està definida.');
         }
@@ -83,7 +83,7 @@ async function main() {
             throw new Error('La variable d\'entorn CHAT_API_OLLAMA_MODEL no està definida.');
         }
 
-        const imagesFolderPath = path.join(__dirname, process.env.DATA_PATH, IMAGES_SUBFOLDER);
+        const imagesFolderPath = path.join(__dirname, process.env.DATA_PATH, IMAGES_SUBFOLDER); // path de imagenes 
         try {
             await fs.access(imagesFolderPath);
         } catch (error) {
@@ -118,25 +118,24 @@ async function main() {
 
             // Iterem per cada fitxer dins del directori de l'animal
             for (const imageFile of imageFiles) {
-                // Construïm la ruta completa al fitxer d'imatge
-                const imagePath = path.join(animalDirPath, imageFile);
-                // Obtenim l'extensió del fitxer i la convertim a minúscules
-                const ext = path.extname(imagePath).toLowerCase();
                 
-                // Si l'extensió no és d'imatge vàlida (.jpg, .png, etc), l'ignorem
+                const imagePath = path.join(animalDirPath, imageFile); // ruta de la imagen 
+                
+                const ext = path.extname(imagePath).toLowerCase(); // extension fichero a mins
+                
+                // si no (.jpg, .png, etc) ignorar
                 if (!IMAGE_TYPES.includes(ext)) {
                     console.log(`S'ignora fitxer no vàlid: ${imagePath}`);
                     continue;
                 }
 
-                // Convertim la imatge a format Base64 per enviar-la a Ollama
+                // img a 64
                 const base64String = await imageToBase64(imagePath);
 
-                // Si s'ha pogut convertir la imatge correctament
                 if (base64String) {
-                    // Loguegem informació sobre la imatge que processarem
-                    console.log(`\nProcessant imatge: ${imagePath}`);
-                    console.log(`Mida de la imatge en Base64: ${base64String.length} caràcters`);
+                    // info a procesar 
+                    console.log(`\nProcesando imagen: ${imagePath}`);
+                    console.log(`Tamaño de la imagen en bas64: ${base64String.length} carácteres`);
                     
                                         
                     const structuredPrompt = `Provide a detailed analysis of the animal in the supplied image.
@@ -178,20 +177,18 @@ async function main() {
 
                                         console.log('Prompt: (structured JSON request)');
 
-                                        // Fem la petició a Ollama amb la imatge i el prompt estructurat
+                                        // request para ollama
                                         const response = await queryOllama(base64String, structuredPrompt);
 
-                                        // Processem la resposta d'Ollama: intentem parsejar JSON
                                         let analisi = null;
                                         if (response) {
-                                                console.log(`\nResposta d'Ollama per ${imageFile}:`);
+                                                console.log(`\nRespuesta de Ollama para ${imageFile}:`);
                                                 console.log(response);
 
-                                                // Intentem parsejar la resposta directament
                                                 try {
-                                                        analisi = JSON.parse(response);
+                                                        analisi = JSON.parse(response); // respuesta a JSON, se almacena en analisi
                                                 } catch (e) {
-                                                        // Si no és JSON pur, intentem extreure el primer objecte JSON present
+                                                        // verif de si es o no json, extrae primer elemento 
                                                         const firstBrace = response.indexOf('{');
                                                         const lastBrace = response.lastIndexOf('}');
                                                         if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
@@ -209,10 +206,8 @@ async function main() {
                                                 console.error(`\nNo s'ha rebut resposta vàlida per ${imageFile}`);
                                                 analisi = { raw_response: null, parse_error: true };
                                         }
-                    // Separador per millorar la llegibilitat del output
-                    console.log('------------------------');
-
-                    // Afegim el resultat a la llista d'anàlisis
+    
+                    // se agrega el resultado a la lista del resultado general 
                     results.push({
                         imatge: { nom_fitxer: imageFile },
                         analisi
@@ -220,10 +215,10 @@ async function main() {
                 }
             }
             console.log(`\nATUREM L'EXECUCIÓ DESPRÉS D'ITERAR EL CONTINGUT DEL PRIMER DIRECTORI`);
-            break; // ATUREM L'EXECUCIÓ DESPRÉS D'ITERAR EL CONTINGUT DEL PRIMER DIRECTORI
+            break; 
         }
 
-        // data json 
+        // json a data
         try {
             const outputFilePath = path.join(__dirname, process.env.DATA_PATH, 'exercici3Resposta.json');
             await fs.writeFile(outputFilePath, JSON.stringify({ analisis: results }, null, 2), 'utf-8');
