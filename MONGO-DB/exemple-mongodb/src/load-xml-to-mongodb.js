@@ -109,6 +109,7 @@ async function loadDataToMongoDB() {
     await client.close();
     console.log('Connexió a MongoDB tancada');
   }
+
 }
 
 // Executar la funció principal
