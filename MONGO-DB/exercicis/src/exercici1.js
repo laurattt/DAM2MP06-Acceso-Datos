@@ -32,51 +32,16 @@ async function parseXMLFile(filePath) {
   }
 }
 
-/*
-// Funció per processar les dades i transformar-les a un format més adequat per MongoDB
-function processYoutuberData(data) {
-  const youtubers = Array.isArray(data.youtubers.youtuber) 
-    ? data.youtubers.youtuber 
-    : [data.youtubers.youtuber];
-  
-  return youtubers.map(youtuber => {
-    // Assegurem que categories i videos siguin arrays
-    const categories = Array.isArray(youtuber.categories.category) 
-      ? youtuber.categories.category 
-      : [youtuber.categories.category];
-    
-    const videos = Array.isArray(youtuber.videos.video) 
-      ? youtuber.videos.video 
-      : [youtuber.videos.video];
-    
-    // Convertim els videos a un format més adequat
-    const processedVideos = videos.map(video => ({
-      videoId: video.id,
-      title: video.title,
-      duration: video.duration,
-      views: parseInt(video.views),
-      uploadDate: new Date(video.uploadDate),
-      likes: parseInt(video.likes),
-      comments: parseInt(video.comments)
-    }));
-    
-    // Retornem el document processat
-    return {
-      youtuberId: youtuber.id,
-      channel: youtuber.channel,
-      name: youtuber.n,
-      subscribers: parseInt(youtuber.subscribers),
-      joinDate: new Date(youtuber.joinDate),
-      categories: categories,
-      videos: processedVideos
-    };
-  });
-}
-*/
 
-// Funció principal per carregar les dades a MongoDB
+// procesar datos y transformar para mongo
+function processAstronomyData(data) {
+  const astronomyQ = Array;
+
+}
+
+// datos a mongodb
 async function loadDataToMongoDB() {
-  // Configuració de la connexió a MongoDB
+  
   const uri = process.env.MONGODB_URI || 'mongodb://root:password@localhost:27017/';
   const client = new MongoClient(uri);
   
@@ -84,16 +49,16 @@ async function loadDataToMongoDB() {
     await client.connect();
     console.log('Connectat a MongoDB');
     
-    const database = client.db('youtubers_db');
-    const collection = database.collection('youtubers');
+    const database = client.db('astronomy_db');
+    const collection = database.collection('astronomy');
     
     // Llegir i analitzar el fitxer XML
     console.log('Llegint el fitxer XML...');
-    const xmlData = await parseXMLFile(xmlFilePath);
+    const xmlData = await parseXMLFile(xmlFilePathAstronomy);
     
     // Processar les dades
     console.log('Processant les dades...');
-    const youtubers = processYoutuberData(xmlData);
+    const astronomyQuestion = processAstronomyData(xmlData);
     
     // Eliminar dades existents (opcional)
     console.log('Eliminant dades existents...');
@@ -101,7 +66,7 @@ async function loadDataToMongoDB() {
     
     // Inserir les noves dades
     console.log('Inserint dades a MongoDB...');
-    const result = await collection.insertMany(youtubers);
+    const result = await collection.insertMany(astronomyQuestion);
     
     console.log(`${result.insertedCount} documents inserits correctament.`);
     console.log('Dades carregades amb èxit!');
@@ -112,30 +77,9 @@ async function loadDataToMongoDB() {
     await client.close();
     console.log('Connexió a MongoDB tancada');
   }
-
-  // Desarrollo PRACT uf3
-
-  const xmlFilePathAstronomy = path.join(__dirname, '../../data/Posts.xml')
-  async function loadDataToMongoDBAstronomy(){
-
-    //config
-    const uri = process.env.MONGODB_URI || 'mongodb://root:password@localhost:27017/';
-    const client = new MongoClient(uri);
-
-    try {
-      //conexion
-      await client.connect();
-      console.log('Connectat a MongoDB');
-      const database = client.db('astronomy_db');
-      const collection = database.collection('astronomy');
-
-      const xmlDataAstronomy = parseXMLFile(xmlFilePathAstronomy);
-
-    } catch (error) {
-      
-    }
-  }
+  
 }
+
 
 // Executar la funció principal
 //loadDataToMongoDB();
