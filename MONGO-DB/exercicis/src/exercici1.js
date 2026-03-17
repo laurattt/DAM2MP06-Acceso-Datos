@@ -2,86 +2,120 @@ const fs = require('fs');
 const path = require('path');
 const { MongoClient } = require('mongodb');
 const xml2js = require('xml2js');
+const entities = require('entities');
+const winston = require('winston');
 require('dotenv').config();
 
-// ruta xml (astronomy bla bla)
-const xmlFilePathAstronomy = path.join(__dirname, '../../data/Posts.xml');
+// xml de astronomy
+const xmlFilePath = path.join(__dirname, '../../data/Posts.xml');
 
-// lectura de xml 
+// logs
+const logDir = path.join(__dirname, '../../data/logs');
+
+if (!fs.existsSync(logDir)) {
+  fs.mkdirSync(logDir, { recursive: true });
+}
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.printf(({ timestamp, level, message }) => {
+      return `${timestamp} [${level.toUpperCase()}]: ${message}`;
+    })
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({
+      filename: path.join(logDir, 'exercici1.log')
+    })
+  ]
+});
+
+// xml lectura
 async function parseXMLFile(filePath) {
   try {
-    console.log(`hola te leo tu fichero xml`)
     const xmlData = fs.readFileSync(filePath, 'utf-8');
     const parser = new xml2js.Parser({ 
       explicitArray: false,
       mergeAttrs: true
     });
-    
+
     return new Promise((resolve, reject) => {
       parser.parseString(xmlData, (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
+        if (err) reject(err);
+        else resolve(result);
       });
     });
+
   } catch (error) {
-    console.error('Error llegint o analitzant el fitxer XML:', error);
+    logger.error('Error llegint XML: ' + error.message);
     throw error;
   }
 }
 
-
-// procesar datos y transformar para mongo
+// data process
 function processAstronomyData(data) {
-  const astronomyQ = Array;
+  const rows = Array.isArray(data.posts.row) 
+    ? data.posts.row 
+    : [data.posts.row];
 
+  return rows
+    .filter(row => row.PostTypeId === '1')
+    .map(row => {
+
+      const bodyDecodificado = entities.decodeHTML(row.Body || '');
+
+      return {
+        questionId: row.Id,
+        creationDate: new Date(row.CreationDate),
+        score: parseInt(row.Score) || 0,
+        viewCount: parseInt(row.ViewCount) || 0,
+        body: bodyDecodificado,
+        title: row.Title,
+        tags: row.Tags,
+        answerCount: parseInt(row.AnswerCount) || 0,
+        commentCount: parseInt(row.CommentCount) || 0
+      };
+    })
+    .sort((a, b) => b.viewCount - a.viewCount)
+    .slice(0, 10000);
 }
 
-// datos a mongodb
+// mongodb cargar 
 async function loadDataToMongoDB() {
-  
+
   const uri = process.env.MONGODB_URI || 'mongodb://root:password@localhost:27017/';
   const client = new MongoClient(uri);
-  
+
   try {
     await client.connect();
-    console.log('Connectat a MongoDB');
-    
+    logger.info('Connectat a MongoDB');
+
     const database = client.db('astronomy_db');
     const collection = database.collection('astronomy');
-    
-    // Llegir i analitzar el fitxer XML
-    console.log('Llegint el fitxer XML...');
-    const xmlData = await parseXMLFile(xmlFilePathAstronomy);
-    
-    // Processar les dades
-    console.log('Processant les dades...');
-    const astronomyQuestion = processAstronomyData(xmlData);
-    
-    // Eliminar dades existents (opcional)
-    console.log('Eliminant dades existents...');
+
+    logger.info('Llegint el fitxer XML...');
+    const xmlData = await parseXMLFile(xmlFilePath);
+
+    logger.info('Processant les dades...');
+    const questions = processAstronomyData(xmlData);
+
+    logger.info('Eliminant dades existents...');
     await collection.deleteMany({});
-    
-    // Inserir les noves dades
-    console.log('Inserint dades a MongoDB...');
-    const result = await collection.insertMany(astronomyQuestion);
-    
-    console.log(`${result.insertedCount} documents inserits correctament.`);
-    console.log('Dades carregades amb èxit!');
-    
+
+    logger.info('Inserint dades a MongoDB...');
+    const result = await collection.insertMany(questions);
+
+    logger.info(result.insertedCount + ' documents inserits correctament');
+    logger.info('Dades carregades amb èxit!');
+
   } catch (error) {
-    console.error('Error carregant les dades a MongoDB:', error);
+    logger.error('Error carregant dades: ' + error.message);
   } finally {
     await client.close();
-    console.log('Connexió a MongoDB tancada');
+    logger.info('Connexió a MongoDB tancada');
   }
-  
 }
 
-
-// Executar la funció principal
-//loadDataToMongoDB();
-
-parseXMLFile(xmlFilePathAstronomy);
+loadDataToMongoDB();
