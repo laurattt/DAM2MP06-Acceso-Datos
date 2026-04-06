@@ -2,11 +2,6 @@ class InputManager {
     constructor(onChangeCallback) {
         this.movementState = { up: false, down: false, left: false, right: false };
         this.onChange = onChangeCallback;
-        this.activeTimer = null;
-        this.activeKey = null;
-        
-        this.initialDelay = 550; 
-        this.burstDelay = 100;   
 
         this.sequences = {
             '\u001b[A': 'up',
@@ -16,6 +11,7 @@ class InputManager {
         };
 
         this.initRawMode();
+        this.startIdleLoop();
     }
 
     initRawMode() {
@@ -25,59 +21,45 @@ class InputManager {
         stdin.setEncoding('utf8');
 
         stdin.on('data', (key) => {
-            if (key === '\u0003') process.exit();
+            if (key === '\u0003') process.exit(); // Ctrl+C para salir
             const dir = this.sequences[key];
             if (dir) this.handleInput(dir);
         });
     }
 
     handleInput(dir) {
-        const isNewPress = (this.activeKey !== dir);
+        // reset direcciones
+        for (let k in this.movementState) 
+            this.movementState[k] = false;
 
-        if (isNewPress) {
-            // APAGAMOS la anterior y ENCENDEMOS la nueva en memoria antes de avisar
-            if (this.activeKey) {
-                this.movementState[this.activeKey] = false;
-            }
-            this.activeKey = dir;
-            this.movementState[dir] = true;
+        // tecla/direccion presionada
+        this.movementState[dir] = true;
 
-            // Emitimos el cambio ATÓMICO (una sola vez con el cambio hecho)
-            if (this.onChange) {
-                this.onChange({ ...this.movementState });
-            }
-        }
-
-        // Gestión de timers para detectar cuándo se suelta
-        if (this.activeTimer) clearTimeout(this.activeTimer);
-
-        const currentTimeout = isNewPress ? this.initialDelay : this.burstDelay;
-
-        this.activeTimer = setTimeout(() => {
-            this.stopAll();
-        }, currentTimeout);
+        // callback
+        if (this.onChange) this.onChange({ ...this.movementState }); //los tres puntos sirven para crear una "copia del objeto" para tener mejor flujo con las callbacks
     }
 
-    // Solo se llama cuando realmente dejamos de recibir señales (soltamos tecla)
-    stopAll() {
-        if (this.activeKey) {
-            this.movementState[this.activeKey] = false;
-            this.activeKey = null;
-            if (this.onChange) {
-                this.onChange({ ...this.movementState });
-            }
-        }
-        if (this.activeTimer) clearTimeout(this.activeTimer);
-        this.activeTimer = null;
-    }
-
-    // Convierte movementState en un string que podemos mandar por mensaje al servidor
+    // direccion actual a servidor
     parseToDirection() {
-        if (this.movementState.up) { return "UP"; }
-        if (this.movementState.down) { return "DOWN"; }
-        if (this.movementState.left) { return "LEFT"; }
-        if (this.movementState.right) { return "RIGHT"; }
+        if (this.movementState.up) 
+            return "UP";
+        if (this.movementState.down) 
+            return "DOWN";
+        if (this.movementState.left) 
+            return "LEFT";
+        if (this.movementState.right) 
+            return "RIGHT";
         return "NONE";
+    }
+
+    // Loop que envía NONE si no hay tecla presionada (cada 100ms)
+    startIdleLoop() {
+        setInterval(() => {
+            const anyPressed = Object.values(this.movementState).some(v => v);
+            if (!anyPressed && this.onChange) {
+                this.onChange({ ...this.movementState });
+            }
+        }, 100);
     }
 }
 

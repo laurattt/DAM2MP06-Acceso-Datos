@@ -4,9 +4,9 @@ const winston = require('winston');
 const crypto = require('crypto');
 require('dotenv').config();
 
-// Logger que utilizaremos para imprimir por pantalla y volcar en fichero log
+// logger
 const logger = winston.createLogger({
-    level: 'info',
+    level: 'debug',
     format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.printf(({ timestamp, level, message }) => `${timestamp} ${level}: ${message}`)
@@ -17,122 +17,140 @@ const logger = winston.createLogger({
     ],
 });
 
-// WebSockets Server
-const wss = new WebSocket.Server({ port: process.env.SERVER_PORT });
-logger.debug('Servidor arrancado')
-wss.on('connection', async (ws, request) => {
+// config
+const SERVER_PORT = process.env.SERVER_PORT;
+const INACTIVITY_LIMIT = 5000;
+const VELOCIDAD = 1.5;
 
-    let gameTimer = null; // Variable para controlar el setTimeout
-    let gameActive = true; // Flag para no procesar más mensajes si la partida acabó
-    const INACTIVITY_LIMIT = process.env.INACTIVITY_TIME_LIMIT_IN_MS;
+const client = new MongoClient(process.env.MONGODB_URI); 
 
-    // Notificar cliente
-    logger.info('Nuevo cliente conectado');
-    ws.send(JSON.stringify({ foo: 'Conexión aceptada' }));
-
-    // Identificador partida
-    const gameId = crypto.randomUUID();
-    logger.info(`Identificador de la partida: ${gameId}`);
-
-    // Arrancar cliente MongoDB
-    const client = new MongoClient(process.env.MONGODB_URI);
+async function iniciarServidor() {
     try {
-        await client.connect(); 
+        await client.connect();
         logger.info('Conexión con MongoDB establecida');
+
+        const database = client.db('movement2d_db');
+        const collection = database.collection('movement2d');
+
+        // websocket
+        const wss = new WebSocket.Server({ port: SERVER_PORT });
+        logger.info(`Servidor arrancado en puerto ${SERVER_PORT}`);
+
+        wss.on('connection', (ws) => {
+
+            let gameTimer = null;
+            let gameActive = true;
+
+            logger.info('Nuevo cliente conectado');
+            ws.send(JSON.stringify({ msg: 'Conexión aceptada' }));
+
+            const gameId = crypto.randomUUID();
+            logger.info(`ID de la partida: ${gameId}`);
+
+            ws.on('message', async (data) => {
+                if (!gameActive) return;
+
+                let message;
+
+                // validamos json (ultimo bug aqui)
+                try {
+                    message = JSON.parse(data);
+                } catch (err) {
+                    logger.error('JSON inválido');
+                    return;
+                }
+
+                logger.info(`Mensaje recibido: ${data}`);
+
+                // verif direcciones
+                const validDirections = ['UP', 'DOWN', 'LEFT', 'RIGHT', 'NONE'];
+                if (!validDirections.includes(message.direction)) {
+                    logger.warn('Dirección inválida');
+                    return;
+                }
+
+                // control inactividad (timer)
+                if (gameTimer) {
+                    clearTimeout(gameTimer);
+                    gameTimer = null;
+                    logger.info("Timer cancelado: el jugador sigue activo");
+                }
+
+                if (message.direction === 'NONE') {
+                    logger.info(`Iniciando timer de inactividad (${INACTIVITY_LIMIT / 1000}s)...`);
+
+                    gameTimer = setTimeout(async () => {
+                        gameActive = false;
+                        logger.warn(`PARTIDA ACABADA: Inactividad detectada en la partida ${gameId}`);
+
+                        const distanciaTotal = await finalizarPartida(collection, gameId);
+
+                        ws.send(JSON.stringify({ event: 'FINISHED', distanciaTotal }));
+                        ws.send(JSON.stringify({ event: 'GAME_OVER', reason: 'timeout' }));
+
+                    }, INACTIVITY_LIMIT);
+                }
+
+                // data a mongo
+                const movementJson = {
+                    gameId: gameId,
+                    direction: message.direction,
+                    timestampClient: message.timestamp,
+                    timestampProcessed: Date.now()
+                };
+
+                console.log(JSON.stringify(movementJson));
+
+                const result = await collection.insertOne(movementJson);
+                logger.info(`Documento insertado: ${result.insertedId}`);
+            });
+
+            ws.on('close', () => {
+                logger.info('Conexión cerrada con cliente');
+
+                if (gameTimer) {
+                    clearTimeout(gameTimer);
+                }
+            });
+
+            ws.on('error', (err) => {
+                logger.error(`Error en la conexión con cliente: ${err}`);
+            });
+        });
+
     } catch (err) {
-        logger.error('Error al conectar a MongoDB:', err);
+        logger.error(`Error al iniciar servidor: ${err.message}`);
     }
-    const database = client.db('movements_db');
-    const collection = database.collection('movements');
+}
 
-    // Cuando recibimos mensaje del cliente
-    ws.on('message', async (data) => {
-        // Si la partida ha acabado, ignoramos mensajes de cliente
-        if (!gameActive) return;
-
-        // Mensaje recibido
-        const message = JSON.parse(data);
-        logger.info(`Mensaje recibido: ${data}`);
+iniciarServidor();
 
 
-        // --- LÓGICA DEL TIMER ---
-        // 1. Limpiamos cualquier timer anterior (si el usuario se mueve, reiniciamos el contador)
-        if (gameTimer) {
-            clearTimeout(gameTimer);
-            gameTimer = null;
-            logger.info("Timer cancelado: el jugador sigue activo.");
-        }
-        // 2. Si recibimos 'NONE', iniciamos el timer
-        if (message.direction === 'NONE') {
-            logger.info(`Iniciando timer de inactividad (${INACTIVITY_LIMIT / 1000}s)...`);
-
-            gameTimer = setTimeout(async () => {
-                gameActive = false;
-                logger.warn(`PARTIDA ACABADA: Inactividad detectada en la partida ${gameId}`);
-                
-                // Lógica para calcular distancia
-                const distanciaTotal = await finalizarPartida(collection, gameId);
-                ws.send(JSON.stringify({ event: 'FINISHED', distanciaTotal: distanciaTotal }));
-                
-                ws.send(JSON.stringify({ event: 'GAME_OVER', reason: 'timeout' }));
-            }, INACTIVITY_LIMIT);
-        }
-        // ------------------------
-
-        // Guardar mensaje en MongoDB
-        const movementJson = {
-            gameId: gameId,
-            direction: message.direction,
-            timestampClient: message.timestamp,
-            timestampProcessed: Date.now()
-        };
-        console.log(movementJson.toString());
-        const result = await collection.insertOne(movementJson);
-        logger.info(`Documento insertado: ${result.insertedId}`);
-    });
-
-    // Cuando cliente cierra conexión
-    ws.on('close', () => {
-        // Cliente desconectado
-        logger.info('Conexión cerrada con cliente');
-    });
-
-    // Cuando hay error de conexión con cliente
-    ws.on('error', (err) => {
-        // Error en la conexión
-        logger.error(`Error en la conexión con cliente: ${err}`);
-    });
-});
-
+// data resumen fin de partida
 async function finalizarPartida(collection, gameId) {
     logger.info(`Calculando resumen final para la partida: ${gameId}...`);
-    
+
     let x = 0;
     let y = 0;
-    const VELOCIDAD = process.env.SPEED_IN_METERS_PER_SECOND;
 
     try {
-        // 1. Obtenemos todos los movimientos de esta partida ordenados por el tiempo del cliente
         const movimientos = await collection
             .find({ gameId: gameId })
             .sort({ timestampClient: 1 })
             .toArray();
 
         if (movimientos.length < 2) {
-            logger.info("No hay suficientes movimientos para calcular desplazamiento.");
+            logger.info("No hay suficientes movimientos.");
             return 0;
         }
 
-        // 2. Iteramos para calcular el desplazamiento entre cada punto
         for (let i = 0; i < movimientos.length - 1; i++) {
             const actual = movimientos[i];
             const siguiente = movimientos[i + 1];
 
-            // Calculamos el tiempo transcurrido en segundos
-            const deltaTiempo = (siguiente.timestampClient - actual.timestampClient) / 1000; 
+            const deltaTiempo = (siguiente.timestampClient - actual.timestampClient) / 1000;
             const distancia = VELOCIDAD * deltaTiempo;
 
-            // 3. Aplicamos el movimiento según la dirección del mensaje 'actual'
             switch (actual.direction) {
                 case 'UP':
                     y += distancia;
@@ -146,22 +164,20 @@ async function finalizarPartida(collection, gameId) {
                 case 'RIGHT':
                     x += distancia;
                     break;
-                case 'NONE':
-                    // No se mueve, no sumamos nada a x o y
-                    break;
             }
         }
 
-        logger.info(`Resultado final - Partida ${gameId}: X=${x.toFixed(2)}, Y=${y.toFixed(2)}`);
+        logger.info(`Resultado final - X=${x.toFixed(2)}, Y=${y.toFixed(2)}`);
 
-        // Calcular hipotenusa de triángulo rectángulo (teorema de pitágoras)
-        const distanciaTotal = Math.sqrt(
-            (x*x) + (y*y)
-        );
-        logger.info(`Resultado final - Partida ${gameId}: distanciaTotal=${distanciaTotal.toFixed(2)}`);
-        return distanciaTotal
+        const distanciaTotal = Math.sqrt((x * x) + (y * y));
+
+        logger.info(`Distancia total: ${distanciaTotal.toFixed(2)}`);
+
+        return distanciaTotal;
 
     } catch (err) {
         logger.error(`Error en finalizarPartida: ${err.message}`);
+        return 0;
     }
 }
+

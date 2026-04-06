@@ -1,4 +1,4 @@
-# AMS2-MP0486-Tema4-RA5 Repositori d'Exemple
+# AMS2-MP06-UF3 Repositori d'Exemple
 
 Aquest repositori proporciona un exemple pràctic d'integració de MongoDB amb Node.js, demostrant com carregar dades XML a una base de dades MongoDB.
 
@@ -25,6 +25,7 @@ Aquest projecte és un exemple que demostra com utilitzar Node.js per processar 
 1. Clona el repositori:
 ```bash
 git clone <url-del-repositori>
+cd DAM-M06-UF03-Punt-Partida-NodeJS
 ```
 
 2. Inicia els contenidors Docker:
@@ -71,8 +72,6 @@ docker-compose up -d
 Això inicia:
 - MongoDB al port 27017
 - MongoDB Express al port 8081 (accessible via http://localhost:8081)
-
-usuari: admin, contrasenya: pass
 
 ### Carregar dades XML a MongoDB
 

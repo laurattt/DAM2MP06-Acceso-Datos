@@ -1,11 +1,76 @@
-2026-04-04T13:37:02.308Z info: Nuevo cliente conectado
-2026-04-04T13:37:02.312Z info: Mensaje recibido:
-2026-04-04T13:37:38.138Z info: Conexión cerrada con cliente
-2026-04-04T13:38:24.148Z info: Nuevo cliente conectado
-2026-04-04T13:38:24.152Z info: Mensaje recibido:
-2026-04-04T13:39:24.827Z info: Conexión cerrada con cliente
-2026-04-04T13:39:51.662Z info: Nuevo cliente conectado
-2026-04-04T13:39:57.602Z info: Mensaje recibido: mensaje de prueba
-2026-04-04T13:40:21.117Z info: Nuevo cliente conectado
-2026-04-04T13:40:24.636Z info: Mensaje recibido:
-2026-04-04T13:40:29.110Z info: Conexión cerrada con cliente
+2026-04-06T19:13:42.096Z info: Conexión con MongoDB establecida
+2026-04-06T19:13:42.106Z info: Servidor arrancado en puerto 8080
+
+2026-04-06T19:25:53.179Z info: Nuevo cliente conectado
+2026-04-06T19:25:53.182Z info: ID de la partida: e1444dc1-39ed-4eee-b36e-b8003faf864b
+2026-04-06T19:25:53.186Z info: Mensaje recibido: {"hello":"world"}
+2026-04-06T19:25:53.186Z warn: Dirección inválida
+2026-04-06T19:25:53.289Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553289}
+2026-04-06T19:25:53.289Z info: Iniciando timer de inactividad (5s)...
+2026-04-06T19:25:53.295Z info: Documento insertado: 69d408c17ea8f36d804006ab
+2026-04-06T19:25:53.389Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553389}
+2026-04-06T19:25:53.390Z info: Timer cancelado: el jugador sigue activo
+2026-04-06T19:25:53.390Z info: Iniciando timer de inactividad (5s)...
+2026-04-06T19:25:53.395Z info: Documento insertado: 69d408c17ea8f36d804006ac
+2026-04-06T19:25:53.490Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553489}
+2026-04-06T19:25:53.490Z info: Timer cancelado: el jugador sigue activo
+2026-04-06T19:25:53.490Z info: Iniciando timer de inactividad (5s)...
+2026-04-06T19:25:53.495Z info: Documento insertado: 69d408c17ea8f36d804006ad
+2026-04-06T19:25:53.589Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553589}
+2026-04-06T19:25:53.590Z info: Timer cancelado: el jugador sigue activo
+2026-04-06T19:25:53.590Z info: Iniciando timer de inactividad (5s)...
+2026-04-06T19:25:53.594Z info: Documento insertado: 69d408c17ea8f36d804006ae
+2026-04-06T19:25:53.690Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553689}
+2026-04-06T19:25:53.690Z info: Timer cancelado: el jugador sigue activo
+2026-04-06T19:25:53.690Z info: Iniciando timer de inactividad (5s)...
+2026-04-06T19:25:53.696Z info: Documento insertado: 69d408c17ea8f36d804006af
+2026-04-06T19:25:53.790Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553789}
+2026-04-06T19:25:53.790Z info: Timer cancelado: el jugador sigue activo
+2026-04-06T19:25:53.791Z info: Iniciando timer de inactividad (5s)...
+2026-04-06T19:25:53.796Z info: Documento insertado: 69d408c17ea8f36d804006b0
+2026-04-06T19:25:53.893Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553891}
+2026-04-06T19:25:53.894Z info: Timer cancelado: el jugador sigue activo
+2026-04-06T19:25:53.894Z info: Iniciando timer de inactividad (5s)...
+2026-04-06T19:25:53.907Z info: Documento insertado: 69d408c17ea8f36d804006b1
+2026-04-06T19:25:53.993Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553992}
+2026-04-06T19:25:53.993Z info: Timer cancelado: el jugador sigue activo
+2026-04-06T19:25:53.993Z info: Iniciando timer de inactividad (5s)...
+2026-04-06T19:25:54.002Z info: Documento insertado: 69d408c17ea8f36d804006b2
+2026-04-06T19:25:54.094Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503554093}
+2026-04-06T19:25:54.094Z info: Timer cancelado: el jugador sigue activo
+2026-04-06T19:25:54.095Z info: Iniciando timer de inactividad (5s)...
+2026-04-06T19:25:54.104Z info: Documento insertado: 69d408c27ea8f36d804006b3
+2026-04-06T19:25:54.193Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503554193}
+2026-04-06T19:25:54.193Z info: Timer cancelado: el jugador sigue activo
+2026-04-06T19:25:54.194Z info: Iniciando timer de inactividad (5s)...
+2026-04-06T19:25:54.199Z info: Documento insertado: 69d408c27ea8f36d804006b4
+2026-04-06T19:25:54.294Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503554293}
+2026-04-06T19:25:54.295Z info: Timer cancelado: el jugador sigue activo
+2026-04-06T19:25:54.295Z info: Iniciando timer de inactividad (5s)...
+2026-04-06T19:25:54.299Z info: Documento insertado: 69d408c27ea8f36d804006b5
+2026-04-06T19:25:54.396Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503554394}
+2026-04-06T19:25:54.396Z info: Timer cancelado: el jugador sigue activo
+2026-04-06T19:25:54.396Z info: Iniciando timer de inactividad (5s)...
+2026-04-06T19:25:54.403Z info: Documento insertado: 69d408c27ea8f36d804006b6
+2026-04-06T19:25:54.425Z info: Mensaje recibido: {"direction":"UP","timestamp":1775503554424}
+2026-04-06T19:25:54.425Z info: Timer cancelado: el jugador sigue activo
+2026-04-06T19:25:54.430Z info: Documento insertado: 69d408c27ea8f36d804006b7
+2026-04-06T19:25:54.720Z info: Mensaje recibido: {"direction":"DOWN","timestamp":1775503554719}
+2026-04-06T19:25:54.726Z info: Documento insertado: 69d408c27ea8f36d804006b8
+2026-04-06T19:25:54.991Z info: Mensaje recibido: {"direction":"LEFT","timestamp":1775503554991}
+2026-04-06T19:25:55.000Z info: Documento insertado: 69d408c27ea8f36d804006b9
+2026-04-06T19:25:55.184Z info: Mensaje recibido: {"direction":"RIGHT","timestamp":1775503555183}
+2026-04-06T19:25:55.194Z info: Documento insertado: 69d408c37ea8f36d804006ba
+2026-04-06T19:25:55.376Z info: Mensaje recibido: {"direction":"UP","timestamp":1775503555375}
+2026-04-06T19:25:55.384Z info: Documento insertado: 69d408c37ea8f36d804006bb
+2026-04-06T19:25:55.968Z info: Mensaje recibido: {"direction":"DOWN","timestamp":1775503555967}
+2026-04-06T19:25:55.977Z info: Documento insertado: 69d408c37ea8f36d804006bc
+2026-04-06T19:25:56.608Z info: Mensaje recibido: {"direction":"UP","timestamp":1775503556607}
+2026-04-06T19:25:56.620Z info: Documento insertado: 69d408c47ea8f36d804006bd
+2026-04-06T19:25:56.792Z info: Mensaje recibido: {"direction":"UP","timestamp":1775503556791}
+2026-04-06T19:25:56.801Z info: Documento insertado: 69d408c47ea8f36d804006be
+2026-04-06T19:25:56.967Z info: Mensaje recibido: {"direction":"UP","timestamp":1775503556966}
+2026-04-06T19:25:56.976Z info: Documento insertado: 69d408c47ea8f36d804006bf
+2026-04-06T19:25:57.780Z info: Mensaje recibido: {"direction":"RIGHT","timestamp":1775503557779}
+2026-04-06T19:25:57.782Z info: Documento insertado: 69d408c57ea8f36d804006c0
+2026-04-06T19:25:58.163Z info: Conexión cerrada con cliente

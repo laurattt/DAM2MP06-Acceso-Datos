@@ -2,9 +2,12 @@
   "name": "pr32_websocket_link",
   "version": "1.0.0",
   "description": "",
-  "main": "movement.js",
+  "main": "movement2d.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "node websocket_server.js",
+    "client": "node websocket_client.js",
+    "manager": "node src/inputManager.js"
   },
   "keywords": [],
   "author": "",

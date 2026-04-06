@@ -1,0 +1,13 @@
+
+CREAR CONTENEDOR 
+    - docker compose up -d
+
+ARRANCAR Y APAGAR CONETENDOR (ya creado)
+    - docker-compose start
+    - docker-compose stop 
+
+LISTA CONETENDORES
+    - docker ps -a
+
+CONTENEDORES RUN
+    - docker ps
