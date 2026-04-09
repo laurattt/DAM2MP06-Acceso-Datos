@@ -5,45 +5,6 @@
 2026-04-06T19:25:53.182Z info: ID de la partida: e1444dc1-39ed-4eee-b36e-b8003faf864b
 2026-04-06T19:25:53.186Z info: Mensaje recibido: {"hello":"world"}
 2026-04-06T19:25:53.186Z warn: Dirección inválida
-2026-04-06T19:25:53.289Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553289}
-2026-04-06T19:25:53.289Z info: Iniciando timer de inactividad (5s)...
-2026-04-06T19:25:53.295Z info: Documento insertado: 69d408c17ea8f36d804006ab
-2026-04-06T19:25:53.389Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553389}
-2026-04-06T19:25:53.390Z info: Timer cancelado: el jugador sigue activo
-2026-04-06T19:25:53.390Z info: Iniciando timer de inactividad (5s)...
-2026-04-06T19:25:53.395Z info: Documento insertado: 69d408c17ea8f36d804006ac
-2026-04-06T19:25:53.490Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553489}
-2026-04-06T19:25:53.490Z info: Timer cancelado: el jugador sigue activo
-2026-04-06T19:25:53.490Z info: Iniciando timer de inactividad (5s)...
-2026-04-06T19:25:53.495Z info: Documento insertado: 69d408c17ea8f36d804006ad
-2026-04-06T19:25:53.589Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553589}
-2026-04-06T19:25:53.590Z info: Timer cancelado: el jugador sigue activo
-2026-04-06T19:25:53.590Z info: Iniciando timer de inactividad (5s)...
-2026-04-06T19:25:53.594Z info: Documento insertado: 69d408c17ea8f36d804006ae
-2026-04-06T19:25:53.690Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553689}
-2026-04-06T19:25:53.690Z info: Timer cancelado: el jugador sigue activo
-2026-04-06T19:25:53.690Z info: Iniciando timer de inactividad (5s)...
-2026-04-06T19:25:53.696Z info: Documento insertado: 69d408c17ea8f36d804006af
-2026-04-06T19:25:53.790Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553789}
-2026-04-06T19:25:53.790Z info: Timer cancelado: el jugador sigue activo
-2026-04-06T19:25:53.791Z info: Iniciando timer de inactividad (5s)...
-2026-04-06T19:25:53.796Z info: Documento insertado: 69d408c17ea8f36d804006b0
-2026-04-06T19:25:53.893Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553891}
-2026-04-06T19:25:53.894Z info: Timer cancelado: el jugador sigue activo
-2026-04-06T19:25:53.894Z info: Iniciando timer de inactividad (5s)...
-2026-04-06T19:25:53.907Z info: Documento insertado: 69d408c17ea8f36d804006b1
-2026-04-06T19:25:53.993Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503553992}
-2026-04-06T19:25:53.993Z info: Timer cancelado: el jugador sigue activo
-2026-04-06T19:25:53.993Z info: Iniciando timer de inactividad (5s)...
-2026-04-06T19:25:54.002Z info: Documento insertado: 69d408c17ea8f36d804006b2
-2026-04-06T19:25:54.094Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503554093}
-2026-04-06T19:25:54.094Z info: Timer cancelado: el jugador sigue activo
-2026-04-06T19:25:54.095Z info: Iniciando timer de inactividad (5s)...
-2026-04-06T19:25:54.104Z info: Documento insertado: 69d408c27ea8f36d804006b3
-2026-04-06T19:25:54.193Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503554193}
-2026-04-06T19:25:54.193Z info: Timer cancelado: el jugador sigue activo
-2026-04-06T19:25:54.194Z info: Iniciando timer de inactividad (5s)...
-2026-04-06T19:25:54.199Z info: Documento insertado: 69d408c27ea8f36d804006b4
 2026-04-06T19:25:54.294Z info: Mensaje recibido: {"direction":"NONE","timestamp":1775503554293}
 2026-04-06T19:25:54.295Z info: Timer cancelado: el jugador sigue activo
 2026-04-06T19:25:54.295Z info: Iniciando timer de inactividad (5s)...
