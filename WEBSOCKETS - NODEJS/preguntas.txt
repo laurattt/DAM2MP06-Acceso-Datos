@@ -1,0 +1,74 @@
+
+1. Per què creus que l'enunciat demana utilitzar la biblioteca ws i WebSockets en lloc d'una API REST tradicional per enviar els moviments del jugador?
+    RTA/ Porque existe una diferencia en su metodología de comunicación, API REST Recibe peticiones más no envía, en cambio WS puede enviar peticiones y viceversa, 
+    exactamente ayuda en la mejoría del flujo de comunicación cuando hay una gran cantidad de datos (mejorar rta)
+
+
+2. Com has implementat la recepció dels missatges en format JSON? Què passa si el client envia un missatge que no té un format JSON vàlid?
+    RTA/ 
+    
+    La interacción de mensajes siempre pasa por un JSON.stringify, asi que no debería de existir alguna incidencia durante su flujo, sin embargo, el mensaje del cliente
+    siempre pasara por un trycatch donde parsea el mensaje a JSON 
+
+    CLIENTE
+    ws.send(JSON.stringify({
+        direction: inputManager.parseToDirection(),
+        timestamp: Date.now()
+    }));
+
+    SERVER
+    try {
+        message = JSON.parse(data);
+    } catch (err) {
+        logger.error('JSON inválido'); --> En el caso de que falle se guardará en el fichero de los logs
+        return;
+    }    
+
+3. Com detecta el teu servidor que un jugador ha tancat el client Node.js abruptament per gestionar la desconnexió?
+    RTA/ El servidor no identifica si el cierre de conexion fue forzada o no, solo identifica que la conexion ya no está activa 
+
+    Evento:
+    ws.on('close', () => {
+        console.log('Conexión cerrada');
+    });
+
+4. Com has estructurat el document JSON que guardes a MongoDB per a cada moviment? Quins camps hi has inclòs?
+    RTA/
+
+    const movementJson = {
+        gameId: gameId,
+        direction: message.direction,
+        timestampClient: message.timestamp,
+        timestampProcessed: Date.now()
+    };
+
+5. L'enunciat demana associar cada moviment a la partida corresponent. Quin mecanisme (ex: ID de sessió) has fet servir per relacionar-los?
+    RTA/ utilicé la libreria crypto para la generacion aleatoria de IDs, mas que todo la utilicé por probar su funcionamiento y si podría servir para el proyecto, 
+    cuando un cliente se conecta, el servidor lo detecta y le asigna el id de la partida, todo esto queda registrado en los logs 
+    
+    const gameId = crypto.randomUUID();
+
+6. Com es connecta exactament el teu codi Node.js a la instància de MongoDB desplegada amb Docker?
+    RTA/ mediante una URI la cual se encuentra definida en el .env 
+    
+    const client = new MongoClient(process.env.MONGODB_URI);
+    await client.connect();
+
+
+7. Si el jugador es mou amb les fletxes, com sap el servidor que encara està en moviment dins la mateixa partida?
+    RTA/ En base a los mensajes que recibe de las teclas presionadas, si deja de recibir mensajes durante 10 segundos se finaliza la partida por inactividad    
+
+
+8. Com has implementat tècnicament la norma de finalitzar la partida si el jugador passa 10 segons sense moure's? (Busca l'ús de setTimeout).
+    RTA/ Con el setTimeout, si el servidor identifica que no se ha presionado alguna tecla durante 10 segundos se finaliza la partida por inactividad
+
+
+9. Quina operació matemàtica has fet servir per calcular la distància en línia recta entre el punt inicial i final?
+    RTA/ se usa la formula de pitagoras   
+
+    const distanciaTotal = Math.sqrt((x * x) + (y * y));
+
+
+10. Quins avantatges té usar Winston per guardar logs en un fitxer i per pantalla envers fer servir un simple console.log()?
+    RTA/ El mantener el flujo del servidor y cliente guardados en un fichero da como beneficio un historico de como funciona el proyecto junto a posibles errores, si 
+    para su seguimiento se utiliza console.log existirán perdidas en la persistencia de información 

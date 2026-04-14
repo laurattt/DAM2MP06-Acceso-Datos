@@ -22,7 +22,7 @@ const SERVER_PORT = process.env.SERVER_PORT;
 const INACTIVITY_LIMIT = 5000;
 const VELOCIDAD = 1.5;
 
-const client = new MongoClient(process.env.MONGODB_URI); 
+const client = new MongoClient(process.env.MONGODB_URI);  // aqui
 
 async function iniciarServidor() {
     try {
@@ -44,7 +44,7 @@ async function iniciarServidor() {
             logger.info('Nuevo cliente conectado');
             ws.send(JSON.stringify({ msg: 'Conexión aceptada' }));
 
-            const gameId = crypto.randomUUID();
+            const gameId = crypto.randomUUID(); 
             logger.info(`ID de la partida: ${gameId}`);
 
             ws.on('message', async (data) => {
@@ -70,25 +70,33 @@ async function iniciarServidor() {
                 }
 
                 // control inactividad (timer)
-                if (gameTimer) {
-                    clearTimeout(gameTimer);
-                    gameTimer = null;
-                    logger.info("Timer cancelado: el jugador sigue activo");
+
+                if (message.direction !== 'NONE') {
+                    if (gameTimer) {
+                        clearTimeout(gameTimer);
+                        gameTimer = null;
+                        logger.info("Timer cancelado: el jugador volvió a moverse");
+                    }
                 }
 
                 if (message.direction === 'NONE') {
-                    logger.info(`Iniciando timer de inactividad (${INACTIVITY_LIMIT / 1000}s)...`);
+                    //logger.info(`Iniciando timer de inactividad (${INACTIVITY_LIMIT / 1000}s)...`);
 
-                    gameTimer = setTimeout(async () => {
-                        gameActive = false;
-                        logger.warn(`PARTIDA ACABADA: Inactividad detectada en la partida ${gameId}`);
+                    // solo crear timer si no existe ya
+                    if (!gameTimer) {
+                        logger.info(`Iniciando timer de inactividad (${INACTIVITY_LIMIT / 1000}s)...`);
 
-                        const distanciaTotal = await finalizarPartida(collection, gameId);
+                        gameTimer = setTimeout(async () => {
+                            gameActive = false;
+                            logger.warn(`PARTIDA ACABADA: Inactividad detectada en la partida ${gameId}`);
 
-                        ws.send(JSON.stringify({ event: 'FINISHED', distanciaTotal }));
-                        ws.send(JSON.stringify({ event: 'GAME_OVER', reason: 'timeout' }));
+                            const distanciaTotal = await finalizarPartida(collection, gameId);
 
-                    }, INACTIVITY_LIMIT);
+                            ws.send(JSON.stringify({ event: 'FINISHED', distanciaTotal }));
+                            ws.send(JSON.stringify({ event: 'GAME_OVER', reason: 'timeout' }));
+
+                        }, INACTIVITY_LIMIT);
+                    }
                 }
 
                 // data a mongo
@@ -180,4 +188,3 @@ async function finalizarPartida(collection, gameId) {
         return 0;
     }
 }
-
